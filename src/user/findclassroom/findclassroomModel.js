@@ -56,4 +56,4 @@ var findclassroomSchema = new Schema({
 
 });
 
-module.exports = mongoose.model('findclassrooms', findclassroomSchema);
+module.exports = mongoose.model('findclassroom', findclassroomSchema);

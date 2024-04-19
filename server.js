@@ -33,13 +33,10 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(routes);
 
-// Add your login endpoint
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-
-  // Add a new route to handle GET requests for retrieving all data from the 'request' collection
+// Define endpoint to fetch requests
 app.get('/requests', async (req, res) => {
   try {
+    // Assuming RequestModel is defined and imported
     const requests = await RequestModel.find({});
     res.json(requests);
   } catch (err) {
@@ -47,6 +44,10 @@ app.get('/requests', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// Add your login endpoint
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
 
   // Find the user in the database
   UserModel.findOne({ username, password }, (err, user) => {
@@ -59,7 +60,7 @@ app.get('/requests', async (req, res) => {
         success: true,
         message: 'Login successful',
         usertype: user.usertype,
-        department: user.department, // Fix typo here
+        department: user.department,
       });
     } else {
       res.json({ success: false, message: 'Invalid username or password' });
