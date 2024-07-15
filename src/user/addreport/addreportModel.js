@@ -49,6 +49,10 @@ var userSchema = new Schema({
         type: String,
         required: true
     },
+    ClassNumber: {
+        type: String,
+        required: true
+    },
 
     State:{
         type: String,

@@ -10,6 +10,26 @@ var getDataConntrollerfn = async (req, res) => {
     }
 }
 
+var getSpecificDataConntrollerfn = async (req, res) => {
+    try {
+        var classes = await addclassService.getDataFromDBService();
+        
+        // Assuming query parameters are used instead of the request body
+        const { capacity, buildingname, ClassType } = req.body;
+
+        // Filter classes based on the query parameters
+        var filteredClasses = classes.filter(cls => 
+             cls.capacity >= capacity &&
+             cls.buildingname === buildingname &&
+             cls.ClassType === ClassType
+        );
+
+        res.send({ "status": true, "data": filteredClasses });
+    } catch (error) {
+        console.error('Error fetching class data:', error);
+        res.status(500).send({ "status": false, "message": "Internal server error" });
+    }
+}
 var createaddclassControllerFn = async (req, res) => {
     try {
         var status = await addclassService.createaddclassDBService(req.body);
@@ -53,4 +73,4 @@ var deleteaddclassController = async (req, res) => {
     }
 }
 
-module.exports = { getDataConntrollerfn, createaddclassControllerFn, updateaddclassController, deleteaddclassController };
+module.exports = { getDataConntrollerfn, createaddclassControllerFn, updateaddclassController, deleteaddclassController,getSpecificDataConntrollerfn };

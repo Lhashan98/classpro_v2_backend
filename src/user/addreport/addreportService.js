@@ -1,5 +1,7 @@
 // userService.js
 var userModel = require('./addreportModel');
+var addclassModel = require('../addclass/addclassModel');
+
 
 module.exports.getDataFromDBService = () => {
     return userModel.find({}).exec();
@@ -9,11 +11,10 @@ module.exports.createUserDBService = (userDetails) => {
     return new Promise(function myFn(resolve, reject) {
         var userModelData = new userModel();
 
-        
         userModelData.department = userDetails.department;
         userModelData.course = userDetails.course;
         userModelData.module = userDetails.module;
-        userModelData. batch = userDetails. batch;
+        userModelData.batch = userDetails.batch;
         userModelData.capacity = userDetails.capacity;
         userModelData.nameofbuilding = userDetails.nameofbuilding;
         userModelData.typeofclass = userDetails.typeofclass;
@@ -21,8 +22,8 @@ module.exports.createUserDBService = (userDetails) => {
         userModelData.starttime = userDetails.starttime;
         userModelData.endtime = userDetails.endtime;
         userModelData.availableclass = userDetails.availableclass;
-        userModelData.State  = userDetails.State;
-       
+        userModelData.ClassNumber = userDetails.ClassNumber;
+        userModelData.State = userDetails.State;
 
         userModelData.save()
             .then(result => {
@@ -57,3 +58,47 @@ module.exports.removeUserDBService = (id) => {
             });
     });
 }
+
+module.exports.getDataFromDBServiceByDate = (availableclass, requestdate, starttime, endtime) => {
+    return userModel.find({
+        availableclass: availableclass,
+        requestdate: requestdate,
+        $or: [
+            {
+                $and: [
+                    { starttime: { $lt: endtime } },
+                    { endtime: { $gt: starttime } }
+                ]
+            },
+            {
+                $and: [
+                    { starttime: { $gte: starttime } },
+                    { endtime: { $lte: endtime } }
+                ]
+            }
+        ]
+    }).exec();
+};
+
+module.exports.updateClassNumberAndID = async (classNumber) => {
+    try {
+        const classDetails = await addclassModel.findOne({ ClassNumber: classNumber });
+
+        if (!classDetails) {
+            return { success: false, message: 'New class number not found' };
+        }
+
+        const newClassID = classDetails._id;
+
+        await addclassModel.updateMany(
+            { ClassNumber: classNumber,
+                availableclass: newClassID },
+        
+        );
+
+        return { success: true, message: 'Class number and corresponding ID updated successfully',newClassID };
+    } catch (error) {
+        console.error('Error updating class number and corresponding ID:', error);
+        return { success: false, message: 'Error updating class number and corresponding ID' };
+    }
+};

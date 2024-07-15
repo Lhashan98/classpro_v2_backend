@@ -1,3 +1,4 @@
+const { model } = require('mongoose');
 var userModel = require('./adddetailsModel');
 
 module.exports.getDataFromDBService = () => {
@@ -38,3 +39,4 @@ module.exports.removeUserDBService = (id) => {
             throw error;
         });
 }
+

@@ -15,6 +15,9 @@ const bookingController = require('../src/user/booking/bookingController');
 const roomController = require('../src/user/room/roomController');
 
 
+// Define route for changing passwords
+router.post('/change-password', loginController.changePassword);
+
 // Route for checking availability
 router.post('/availability', bookingController.getAvailableRooms);
 
@@ -66,6 +69,7 @@ router.route('/addfaculty/delete/:id').delete(addfacultyController.deleteaddfacu
 
 // Add class routes
 router.route('/addclass/getAll').get(addclassController.getDataConntrollerfn);
+router.route('/addclass/getSpecificClass').post(addclassController.getSpecificDataConntrollerfn);
 router.route('/addclass/create').post(addclassController.createaddclassControllerFn);
 router.route('/addclass/update/:id').patch(addclassController.updateaddclassController);
 router.route('/addclass/delete/:id').delete(addclassController.deleteaddclassController);
@@ -80,12 +84,15 @@ router.route('/addreport/getAll').get(addreportController.addreportgetDataContro
 router.route('/addreport/create').post(addreportController.addreportcreateUserControllerFn);
 router.route('/addreport/update/:id').patch(addreportController.addreportupdateUserController);
 router.route('/addreport/delete/:id').delete(addreportController.addreportdeleteUserController);
+router.route('/addreport/getByCladdIdAndDate').post(addreportController.addreportgetDateByCladdIdAndDateFn)
+router.route('/addreport/editReportClassDetails/:id').post(addreportController.editReportClassDetails)
 
 // Find classroom routes
 router.route('/findclassroom/getAll').get(findclassroomController.getDataConntrollerfn);
 router.route('/findclassroom/create').post(findclassroomController.createfindclassroomControllerFn);
 router.route('/findclassroom/update/:id').patch(findclassroomController.updatefindclassroomController);
 router.route('/findclassroom/delete/:id').delete(findclassroomController.deletefindclassroomController);
+
 
 
 

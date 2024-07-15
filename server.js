@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const routes = require('./routes/routes');
+const cron = require('node-cron');
+const addreportModel = require('./src/user/addreport/addreportModel');
 
 const app = express();
 const PORT = process.env.PORT || 8002;
@@ -29,14 +31,30 @@ const UserSchema = new mongoose.Schema({
 
 const UserModel = mongoose.model('User', UserSchema);
 
+// Define the Booking model corresponding to the "addreport" collection
+const BookingSchema = new mongoose.Schema({
+  classroom: String,
+  date: Date,
+  startTime: String,
+  endTime: String,
+  user: String,
+});
+
+const BookingModel = mongoose.model('addreport', BookingSchema);
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(routes);
 
-// Define endpoint to fetch requests
+// Define endpoint to fetch requests (assuming RequestModel is defined)
+const RequestSchema = new mongoose.Schema({
+  // Define schema fields as per your requirements
+});
+
+const RequestModel = mongoose.model('Request', RequestSchema);
+
 app.get('/requests', async (req, res) => {
   try {
-    // Assuming RequestModel is defined and imported
     const requests = await RequestModel.find({});
     res.json(requests);
   } catch (err) {
@@ -67,6 +85,40 @@ app.post('/login', (req, res) => {
     }
   });
 });
+
+// // Schedule task to run at 00:00 on Sunday
+// cron.schedule('0 0 * * 0', async () => {
+//   try {
+//     await BookingModel.deleteMany({});
+//     console.log('All bookings in addreport have been reset');
+//   } catch (err) {
+//     console.error('Error resetting bookings:', err);
+//   }
+// });
+
+
+// Schedule task to run every minute
+
+// cron.schedule('* * * * *', async () => {
+//   try {
+//     await addreportModel.deleteMany({});
+//     console.log('All bookings in addnewreports have been reset');
+//   } catch (err) {
+//     console.error('Error resetting bookings:', err);
+//   }
+// });
+
+
+// // Temporary endpoint to manually reset bookings for testing
+// app.get('/api/reset', async (req, res) => {
+//   try {
+//     await BookingModel.deleteMany({});
+//     res.send('All bookings in addreport have been reset');
+//   } catch (err) {
+//     console.error('Error resetting bookings:', err);
+//     res.status(500).send('Server error');
+//   }
+// });
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
