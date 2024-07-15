@@ -7,19 +7,19 @@ const cron = require('node-cron');
 const addreportModel = require('./src/user/addreport/addreportModel');
 
 const app = express();
-const PORT = process.env.PORT || 8002;
+const PORT =  8002;
 
-// Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/classpro', {
+// Connect to MongoDB with authentication credentials
+mongoose.connect('mongodb://rootUser:rootUser1234@127.0.0.1:27017/classpro', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => {
-    console.log('DB Connected!');
-  })
-  .catch((error) => {
-    console.log('Error:', error);
-  });
+.then(() => {
+  console.log('DB Connected!');
+})
+.catch((error) => {
+  console.error('Error connecting to DB:', error);
+});
 
 // Define a simple user model
 const UserSchema = new mongoose.Schema({
