@@ -2,7 +2,8 @@ var userService = require('./addreportService');
 
 var addreportgetDataControllerFn = async (req, res) => {
     try {
-        var user = await userService.getDataFromDBService();
+        var department = req.query.department; // get department from query parameters
+        var user = await userService.getDataFromDBService(department);
         res.send({ "status": true, "data": user });
     } catch (error) {
         console.error('Error getting user data:', error);

@@ -3,8 +3,13 @@ var userModel = require('./addreportModel');
 var addclassModel = require('../addclass/addclassModel');
 
 
-module.exports.getDataFromDBService = () => {
-    return userModel.find({}).exec();
+module.exports.getDataFromDBService = (department) => {
+    let query = {};
+    if (department) {
+        query.department = department;
+    }
+    return userModel.find(query).exec();
+
 }
 
 module.exports.createUserDBService = (userDetails) => {
