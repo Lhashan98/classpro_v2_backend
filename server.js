@@ -96,6 +96,16 @@ app.post('/login', (req, res) => {
 //   }
 // });
 
+// Schedule task to run at 12:00 PM on Friday
+cron.schedule('0 12 * * 5', async () => {
+  try {
+    await BookingModel.deleteMany({});
+    console.log('All bookings in addreport have been reset');
+  } catch (err) {
+    console.error('Error resetting bookings:', err);
+  }
+});
+
 
 // Schedule task to run every minute
 
